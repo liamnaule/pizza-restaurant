@@ -7,8 +7,8 @@ class Restaurant(db.Model):
     __tablename__ = 'restaurants'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    address = db.Column(db.String)
+    name = db.Column(db.String, nullable=False)
+    address = db.Column(db.String, nullable=False)
 
     restaurant_pizzas = db.relationship('RestaurantPizza', backref='restaurant', cascade='all, delete-orphan')
 
@@ -16,16 +16,15 @@ class Restaurant(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'address': self.address,
-            'restaurant_pizzas': [rp.to_dict() for rp in self.restaurant_pizzas]
+            'address': self.address
         }
 
 class Pizza(db.Model):
     __tablename__ = 'pizzas'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    ingredients = db.Column(db.String)
+    name = db.Column(db.String, nullable=False)
+    ingredients = db.Column(db.String, nullable=False)
 
     restaurant_pizzas = db.relationship('RestaurantPizza', backref='pizza', cascade='all, delete-orphan')
 
@@ -40,7 +39,7 @@ class RestaurantPizza(db.Model):
     __tablename__ = 'restaurant_pizzas'
 
     id = db.Column(db.Integer, primary_key=True)
-    price = db.Column(db.Integer)
+    price = db.Column(db.Float, nullable=False)
     pizza_id = db.Column(db.Integer, db.ForeignKey('pizzas.id'), nullable=False)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'), nullable=False)
 
@@ -54,8 +53,5 @@ class RestaurantPizza(db.Model):
         return {
             'id': self.id,
             'price': self.price,
-            'pizza_id': self.pizza_id,
-            'restaurant_id': self.restaurant_id,
-            'pizza': self.pizza.to_dict(),
-            'restaurant': self.restaurant.to_dict() if self.restaurant else None
+            'pizza': self.pizza.to_dict()
         }

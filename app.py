@@ -1,10 +1,17 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from flask import Flask, jsonify, request
+from flask_migrate import Migrate
 from models import db, Restaurant, Pizza, RestaurantPizza
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db.init_app(app)
+migrate = Migrate(app, db)
 
 @app.route('/restaurants', methods=['GET'])
 def get_restaurants():
